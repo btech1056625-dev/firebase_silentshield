@@ -1,0 +1,130 @@
+/* popup.css */
+body {
+    width: 320px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #111;
+}
+
+.header p {
+    margin: 5px 0 0;
+    font-size: 12px;
+    color: #666;
+}
+
+.status-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.score-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: conic-gradient(#4caf50 85%, #e0e0e0 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    --progress: 0%;
+}
+
+.score-inner {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.status-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.details {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #777;
+    text-align: left;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.details div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+/* Dynamic Alert Banner */
+.alert-banner {
+    background: #fffbeb;
+    color: #92400e;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid #fde68a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    animation: slideDown 0.3s ease-out;
+}
+
+.alert-banner.hidden {
+    display: none;
+}
+
+.alert-banner.danger {
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Score Color Coding */
+.score-warning {
+    color: #f59e0b !important;
+}
+
+.score-danger {
+    color: #ef4444 !important;
+}
+
+.circle-warning {
+    background: conic-gradient(#f59e0b var(--progress), #e0e0e0 0) !important;
+}
+
+.circle-danger {
+    background: conic-gradient(#ef4444 var(--progress), #e0e0e0 0) !important;
+}

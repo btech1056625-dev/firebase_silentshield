@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "Passive Human Verification Layer",
+    "version": "1.0",
+    "description": "An invisible ML-based trust layer replacing traditional CAPTCHA.",
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Passive Trust Status"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "css": [
+                "fallback.css"
+            ],
+            "js": [
+                "gesturecontent.js"
+            ],
+            "run_at": "document_end"
+        }
+    ]
+}

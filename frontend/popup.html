@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="header">
+        <h2>Invisible Security</h2>
+        <p>Passive ML Verification Layer</p>
+    </div>
+
+    <div id="alert-banner" class="alert-banner hidden">
+        ⚠️ Low Confidence Alert
+    </div>
+
+    <div class="status-card">
+        <div id="score-circle" class="score-circle">
+            <div id="score-text" class="score-inner">--%</div>
+        </div>
+        <div id="status-text" class="status-text">Scanning...</div>
+
+        <div class="details">
+            <div><span>Browser Entropy:</span> <span id="entropy-val">Normal</span></div>
+            <div><span>Interaction Dynamics:</span> <span id="interaction-val">Natural</span></div>
+            <div><span>Friction Level:</span> <span id="friction-val">Zero</span></div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Verification | SilentShield</title>
+    <link rel="stylesheet" href="fallback.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f172a;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .standalone-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+
+        /* Override some overlay styles for standalone page */
+        .ml-verify-overlay {
+            position: relative;
+            background: transparent;
+            backdrop-filter: none;
+            opacity: 1;
+            width: auto;
+            height: auto;
+            display: block;
+        }
+
+        .ml-verify-box {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .restricted-mode .ml-verify-icon {
+            background: #fee2e2;
+        }
+
+        .restricted-mode .ml-verify-icon svg {
+            stroke: #ef4444;
+        }
+
+        .restricted-mode .ml-verify-btn {
+            display: none;
+        }
+
+        .restricted-mode .ml-verify-title {
+            color: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+    <div class="standalone-container">
+        <div id="verify-root" class="ml-verify-overlay show">
+            <div id="verify-box" class="ml-verify-box">
+                <div class="ml-verify-icon" id="icon-container">
+                    <svg width="24" height="24" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path>
+                    </svg>
+                </div>
+                <h3 class="ml-verify-title" id="title">Security Verification</h3>
+                <p class="ml-verify-desc" id="desc">Our system detected unusual activity. Please verify you are human to continue.</p>
+                
+                <div class="ml-verify-btn" id="hold-btn">
+                    <div class="ml-verify-progress" id="progress-fill"></div>
+                    <div class="ml-verify-text" id="btn-text">Press and Hold</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check for "reason=block" in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const reason = urlParams.get('reason');
+
+        if (reason === 'block') {
+            document.getElementById('verify-box').classList.add('restricted-mode');
+            document.getElementById('title').innerText = "Access Restricted";
+            document.getElementById('desc').innerText = "Suspicious behavior has been detected from your session. Access to this resource is permanently restricted.";
+            document.getElementById('icon-container').innerHTML = `
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+                </svg>
+            `;
+        } else {
+            // Interaction logic for standalone verification
+            const btn = document.getElementById('hold-btn');
+            const progressFill = document.getElementById('progress-fill');
+            const btnText = document.getElementById('btn-text');
+            
+            let holdTimer;
+            let progress = 0;
+
+            const startHolding = (e) => {
+                e.preventDefault();
+                btnText.innerText = "Holding...";
+                btnText.classList.add('holding');
+
+                holdTimer = setInterval(() => {
+                    if (progress >= 100) {
+                        clearInterval(holdTimer);
+                        success();
+                    } else {
+                        progress += 2;
+                        progressFill.style.width = `${progress}%`;
+                    }
+                }, 20);
+            };
+
+            const stopHolding = () => {
+                if (progress >= 100) return;
+                clearInterval(holdTimer);
+                progress = 0;
+                progressFill.style.width = "0%";
+                btnText.innerText = "Press and Hold";
+                btnText.classList.remove('holding');
+            };
+
+            const success = () => {
+                btnText.innerText = "Verified!";
+                progressFill.classList.add('success');
+                setTimeout(() => {
+                    // In a real app, this might redirect back or close the tab
+                    document.getElementById('desc').innerText = "Thank you. You have been verified as human.";
+                }, 800);
+            };
+
+            btn.addEventListener('mousedown', startHolding);
+            btn.addEventListener('touchstart', startHolding);
+            window.addEventListener('mouseup', stopHolding);
+            window.addEventListener('touchend', stopHolding);
+        }
+    </script>
+</body>
+</html>
