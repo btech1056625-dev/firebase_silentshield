@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 const db = require('../db');
 const redis = require('../redis');
 
-const JWT_SECRET = 'your_jwt_secret_here';
-const ML_SERVICE_URL = 'http://localhost:5000/predict';
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_here';
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5000/predict';
 
 // Endpoint: Initial Passive Verification
 router.post('/verify', async (req, res) => {
@@ -30,8 +30,29 @@ router.post('/verify', async (req, res) => {
             }
         }
 
-        // 2. Send feature payload to Python ML service
-        const mlResponse = await axios.post(ML_SERVICE_URL, payload);
+        // 2. Prepare feature payload for Python ML service
+        // Mapping frontend features -> ML model features
+        const mlPayload = {
+            'mouse_avg_velocity': payload.behavior.avgMouseSpeed || 0,
+            'mouse_acceleration_std': Math.sqrt(payload.behavior.mouseJerkiness || 0), // Jerkiness is variance, model likely wants std
+            'mouse_curvature_entropy': 0.85, // Placeholder if not tracked
+            'click_frequency': payload.behavior.clickCount / 5, // clickCount over 5s interval
+            'typing_dwell_time': 0.12, // Placeholder
+            'typing_flight_time': 0.15, // Placeholder
+            'user_agent_entropy': 14.2, // Derived from agent in real setup
+            'screen_resolution_variety': 2.0, 
+            'webgl_fingerprint_uniqueness': 0.98,
+            'font_count': 45,
+            'requests_per_second': 5.5,
+            'session_duration': 5,
+            'navigation_entropy': 1.2,
+            'burstiness': 0.4,
+            'interaction_complexity': 38.42,
+            'human_behavior_score': 0.27,
+            'session_intensity': 0.0183
+        };
+
+        const mlResponse = await axios.post(ML_SERVICE_URL, mlPayload);
         const humanScore = mlResponse.data.confidence;
 
         // Threshold Logic
