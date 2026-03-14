@@ -49,4 +49,36 @@ function updateUI(score, decision) {
         scoreCircle.className = "score-circle"; // Uses default green from CSS
         alertBanner.className = "alert-banner hidden";
     }
+
+    // Update Detail Values Dynamically
+    updateDetails(score);
+}
+
+function updateDetails(score) {
+    const entropy = document.getElementById('entropy-val');
+    const interaction = document.getElementById('interaction-val');
+    const friction = document.getElementById('friction-val');
+
+    if (score >= 0.8) {
+        entropy.innerText = "Natural";
+        entropy.style.color = "#4caf50";
+        interaction.innerText = "Human-like";
+        interaction.style.color = "#4caf50";
+        friction.innerText = "Minimal";
+        friction.style.color = "#4caf50";
+    } else if (score >= 0.5) {
+        entropy.innerText = "Slight Deviation";
+        entropy.style.color = "#f59e0b";
+        interaction.innerText = "Erratic";
+        interaction.style.color = "#f59e0b";
+        friction.innerText = "Medium";
+        friction.style.color = "#f59e0b";
+    } else {
+        entropy.innerText = "Synthetic";
+        entropy.style.color = "#ef4444";
+        interaction.innerText = "Mechanical";
+        interaction.style.color = "#ef4444";
+        friction.innerText = "High/Blocked";
+        friction.style.color = "#ef4444";
+    }
 }
