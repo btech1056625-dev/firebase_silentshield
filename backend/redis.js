@@ -6,8 +6,8 @@ const client = redis.createClient({
     socket: {
         reconnectStrategy: (retries) => {
             if (retries > 10) {
-                console.warn('⚠️ Redis: Max retries reached. Will try again in 30 seconds.');
-                return 30000;
+                console.warn('⚠️ Redis: Max retries reached. Will try again in 5 minutes.');
+                return 300000; // 5 minutes
             }
             return Math.min(retries * 100, 3000);
         }

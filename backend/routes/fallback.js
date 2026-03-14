@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../db');
 const redis = require('../redis');
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_enterprise_key_for_hackathon';
 
 // Endpoint: Fallback Success Validation
 router.post('/fallback-success', async (req, res) => {

@@ -28,8 +28,21 @@ def predict():
         if not data:
             return jsonify({'error': 'No data provided'}), 400
         
-        # Convert data to DataFrame
-        input_df = pd.DataFrame([data])
+        print(f"DEBUG: Processing Features: {data}")
+        
+        # Convert data to DataFrame with fixed feature order
+        feature_columns = [
+            'mouse_avg_velocity', 'mouse_acceleration_std', 'mouse_curvature_entropy',
+            'click_frequency', 'typing_dwell_time', 'typing_flight_time',
+            'user_agent_entropy', 'screen_resolution_variety', 'webgl_fingerprint_uniqueness',
+            'font_count', 'requests_per_second', 'session_duration',
+            'navigation_entropy', 'burstiness', 'interaction_complexity',
+            'human_behavior_score', 'session_intensity'
+        ]
+        
+        # Extract features in exact order
+        features_dict = {col: data.get(col, 0) for col in feature_columns}
+        input_df = pd.DataFrame([features_dict])[feature_columns]
         
         # Ensure correct feature order if necessary (assuming data matches model expectations)
         # Note: input_df.values ensures no feature name warnings are triggered if names don't match perfectly
@@ -47,6 +60,7 @@ def predict():
         })
         
     except Exception as e:
+        print(f"❌ ML Error: {str(e)}")
         return jsonify({'error': str(e)}), 400
 
 @app.route('/health', methods=['GET'])

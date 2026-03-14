@@ -5,12 +5,13 @@ const jwt = require('jsonwebtoken');
 const db = require('../db');
 const redis = require('../redis');
 
-const JWT_SECRET = 'your_jwt_secret_here';
-const ML_SERVICE_URL = 'http://localhost:5000/predict';
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_enterprise_key_for_hackathon';
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5000/predict';
 
 // Endpoint: Initial Passive Verification
 router.post('/verify', async (req, res) => {
     const payload = req.body;
+    console.log(`📩 Incoming request for /verify from domain: ${payload.domain || 'unknown'}`);
 
     try {
         if (!payload.session_id) {
@@ -30,8 +31,9 @@ router.post('/verify', async (req, res) => {
             }
         }
 
-        // 2. Send feature payload to Python ML service
-        const mlResponse = await axios.post(ML_SERVICE_URL, payload);
+        // 2. Send behavior features to Python ML service
+        const mlFeatures = payload.behavior || {};
+        const mlResponse = await axios.post(ML_SERVICE_URL, mlFeatures);
         const humanScore = mlResponse.data.confidence;
 
         // Threshold Logic
