@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 const db = require('../db');
 const redis = require('../redis');
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL;
+const JWT_SECRET = 'your_jwt_secret_here';
+const ML_SERVICE_URL = 'http://localhost:5000/predict';
 
 // Endpoint: Initial Passive Verification
 router.post('/verify', async (req, res) => {
