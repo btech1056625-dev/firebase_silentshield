@@ -29,15 +29,17 @@ router.post('/fallback-success', async (req, res) => {
         );
 
         // Cache the successful fallback verification
-        const cacheData = {
-            session_id,
-            score: 1.0, 
-            decision: 'ALLOW',
-            token: trustToken
-        };
-        await redis.set(`session:${session_id}`, JSON.stringify(cacheData), {
-            EX: 600 // 10 minutes
-        });
+        if (redis.isAvailable()) {
+            const cacheData = {
+                session_id,
+                score: 1.0, 
+                decision: 'ALLOW',
+                token: trustToken
+            };
+            await redis.set(`session:${session_id}`, JSON.stringify(cacheData), {
+                EX: 600 // 10 minutes
+            });
+        }
 
         return res.json({
             success: true,

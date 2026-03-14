@@ -18,14 +18,16 @@ router.post('/verify', async (req, res) => {
         }
 
         // 1. Pre-Verification Check (Redis Cache)
-        const cachedResult = await redis.get(`session:${payload.session_id}`);
-        if (cachedResult) {
-            const data = JSON.parse(cachedResult);
-            console.log(`⚡ Cache Hit for session: ${payload.session_id}`);
-            return res.json({
-                ...data,
-                source: 'CACHE'
-            });
+        if (redis.isAvailable()) {
+            const cachedResult = await redis.get(`session:${payload.session_id}`);
+            if (cachedResult) {
+                const data = JSON.parse(cachedResult);
+                console.log(`⚡ Cache Hit for session: ${payload.session_id}`);
+                return res.json({
+                    ...data,
+                    source: 'CACHE'
+                });
+            }
         }
 
         // 2. Send feature payload to Python ML service
@@ -62,7 +64,7 @@ router.post('/verify', async (req, res) => {
         );
 
         // 5. Cache successful verification in Redis (TTL: 10 minutes)
-        if (decision === 'ALLOW') {
+        if (decision === 'ALLOW' && redis.isAvailable()) {
             const cacheData = {
                 session_id: payload.session_id,
                 score: humanScore,
