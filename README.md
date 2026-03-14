@@ -64,4 +64,8 @@ The system is highly configurable via environment variables in the `backend/.env
 SilentShield uses a Background Service Worker to perform API requests, ensuring compatibility with sites having strict Content Security Policies (CSP). All human-verified sessions are protected by signed JWT tokens.
 
 ## 👥 Contributors
+- **Bhavya Varshney** - *Full Stack Developer*
+- **Sahaj Pharkya** - *Machine Learning Model Developer*
+
+---
 Developed as a high-performance security layer for modern web applications.
