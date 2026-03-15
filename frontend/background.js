@@ -1,6 +1,6 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === "VERIFY_DATA") {
-        fetch("http://localhost:3000/api/verify", {
+        fetch("http://13.237.72.150/api/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request.payload)
@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 
     if (request.type === "FALLBACK_SUCCESS") {
-        fetch("http://localhost:3000/api/fallback-success", {
+        fetch("http://13.237.72.150/api/fallback-success", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request.payload)
